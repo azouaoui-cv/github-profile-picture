@@ -7,11 +7,24 @@ Core utilities
 ###########
 import numpy as np
 from . import COLORS_STR_2_RGB
+from .data import get_user_data
+from .data import get_fill_values
 
-def create_logo(colors, counts, margin=20, block=50):
+def create_logo(username, margin=20, block=50):
     """
     Create random GitHub logo
     """
+    # Get user data
+    data = get_user_data(username)
+    # Get filling values
+    values = get_fill_values(data)
+    # Get the color distribution
+    colors, counts = np.unique(values, return_counts=True)
+    # Sanity check
+    assert set(COLORS_STR_2_RGB.keys()) == set(colors), f"Invalid colors in {colors}"
+    #########
+    # Setup #
+    #########
     side = 2 * margin + 5 * block
     # Empty image
     img = np.zeros((side, side, 3), dtype='uint8')
